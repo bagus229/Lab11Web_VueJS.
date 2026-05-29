@@ -31,29 +31,6 @@ Menampilkan data dengan membuat file index.html pada direktori lab8_vuejs. kode 
     <div id="app">
         <h1>Daftar Artikel</h1>
 
-        <button id="btn-tambah" @click="tambah">Tambah Data</button>
-            <div class="modal" v-if="showForm">
-                <div class="modal-content">
-                    <span class="close" @click="showForm = false">&times;</span>
-                    <form id="form-data" @submit.prevent="saveData">
-                        <h3 id="form-title">{{ formTitle }}</h3>
-                        <div><input type="text" name="judul" id="judul" vmodel="formData.judul" placeholder="Judul" required></div>
-                        <div><textarea name="isi" id="isi" rows="10" vmodel="formData.isi"></textarea></div>
-                        <div>
-                            <select name="status" id="status" vmodel="formData.status">
-                                <option v-for="option in statusOptions" :value="option.value">
-                                    
-                                    {{ option.text }}
-                                </option>
-                            </select>
-                        </div>
-                        <input type="hidden" id="id" v-model="formData.id">
-                        <button type="submit" id="btnSimpan">Simpan</button>
-                        <button @click="showForm = false">Batal</button>
-                    </form>
-                </div>
-             </div>
-
         <table>
             <thead>
                 <tr>
