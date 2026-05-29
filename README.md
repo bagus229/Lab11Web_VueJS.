@@ -13,7 +13,7 @@ Menyiapkan library Vuejs dan Axios untuk call API REST. Menggunakan CDN untuk me
 ```<script src="https://unpkg.com/axios/dist/axios.min.js"></script>```
 
 Struktur direktori:
-##### ![Gambar 1](ss/gambar1.png).
+##### ![Gambar 1](ss1/gambar1.png).
 
 Menampilkan data dengan membuat file index.html pada direktori lab8_vuejs. kode sebagai berikut:
 ```html
@@ -400,7 +400,7 @@ form button {
 ```
 
 Hasil:
-##### ![Gambar 1](ss/gambar2.png).
-##### ![Gambar 1](ss/gambar3.png).
+##### ![Gambar 1](ss1/gambar2.png).
+##### ![Gambar 1](ss1/gambar3.png).
 
 Penggunaan VueJS mempermudah pembuatan antarmuka Frontend API untuk operasi CRUD secara dinamis. Melalui fitur reaktivitas data dan pengikatan formulir otomatis yang dapat langsung memperbarui tampilan tabel secara real-time tanpa perlu memuat ulang (reload) halaman web.
