@@ -376,6 +376,7 @@ form button {
 }
 ```
 
+Aktifkan xampp terliebih dahulu. Lalu, jalankan dibrowser untuk melihat hasilnya.
 Hasil:
 ##### ![Gambar 1](ss1/gambar2.png).
 ##### ![Gambar 1](ss1/gambar3.png).
