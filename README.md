@@ -396,4 +396,28 @@ klien (Client-Side Routing).
 
 Langkah-Langkah Praktikum
 Menambahkan pustaka Vue Router menggunakan CDN. lalu, menambahkan library Vue Router setelah VueJS dan Axios.
-```<script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>```
+
+```<script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>```.
+
+Penjelasan: digunakan untuk menghubungkan library Vue Router ke dalam aplikasi Vue.js melalui CDN. dapat menghubungkan komponen ke rute tertentu dan dapat berpindah halaman tanpa harus direfresh.
+
+Membuat folder components pada folder assets/js.
+##### ![Gambar 1](ss1/gambar4.png).
+
+#### 1. Membuat File Komponen Halaman Utama
+Membuat file Home.js pada folder assets/js/components.
+kode sebagai berikut:
+```JS
+const Home = {
+    template: `
+         <div class="home-container">
+         <h2>Selamat Datang di Portal Admin Artikel</h2>
+         <p>Gunakan menu navigasi di atas untuk mengelola data artikel secara real-time
+memanfaatkan RESTful API CodeIgniter 4 dan VueJS.</p>
+         </div>
+     `
+};
+```
+Penjelasan: kode ini berguna sebagai tampilan halaman utama atau Home yang berisi sambutan dan menu navigasi untuk mengatur data artikel secara real-time yang dihubungkan menggunakan Vue Router.
+
+#### 2.  
