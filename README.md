@@ -57,7 +57,7 @@ Menampilkan data dengan membuat file index.html pada direktori lab8_vuejs. kode 
 </body>
 </html>
 ```
-View ini akan menampilkan data artikel yg ada di ci4.
+Penjelasan: View ini akan menampilkan data artikel yg ada di praktikum sebelumnya, yakni ci4.
 
 Membuat file app.js.
 kode:
@@ -382,3 +382,18 @@ Hasil:
 ##### ![Gambar 1](ss1/gambar3.png).
 
 Penggunaan VueJS mempermudah pembuatan antarmuka Frontend API untuk operasi CRUD secara dinamis. Melalui fitur reaktivitas data dan pengikatan formulir otomatis yang dapat langsung memperbarui tampilan tabel secara real-time tanpa perlu memuat ulang (reload) halaman web.
+
+Pertanyaan dan Tugas
+Selesaikan programnya sesuai Langkah-langkah yang ada. Anda boleh melakukan
+improvisasi.
+
+
+
+## Langkah-Langkah Praktikum 12: VueJS Komponrn dan Routing (Single page Application)
+Vue Components merupakan bagian antarmuka pengguna (UI) yang bersifat modular dan dapat digunakan kembali. Dengan memanfaatkan komponen, tampilan aplikasi dapat dipecah menjadi beberapa bagian yang terpisah, seperti Header, Footer, Sidebar, maupun daftar data tertentu. Pendekatan ini membantu menjaga struktur kode tetap rapi, mudah dipelihara, dan lebih terorganisir.
+Vue Router adalah library resmi untuk VueJS yang menangani pemindahan halaman di sisi
+klien (Client-Side Routing). 
+
+Langkah-Langkah Praktikum
+Menambahkan pustaka Vue Router menggunakan CDN. lalu, menambahkan library Vue Router setelah VueJS dan Axios.
+```<script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>```
