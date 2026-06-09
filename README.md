@@ -959,6 +959,8 @@ Penjelasan: halaman about ini berisikan profil: Nama, NIM, Kelas, dan Foto/Avata
 }
 ```
 Penjelasan: agar tampilan halaman about lebih menarik.
+
+
 3. Lakukan pengujian perpindahan halaman menu (Beranda, Kelola Artikel, dan About) dan pastikan browser tidak melakukan hard-reload (SPA bekerja).
 ##### ![Gambar 1](ss1/gambar10.png).
 ##### ![Gambar 1](ss1/gambar11.png).
