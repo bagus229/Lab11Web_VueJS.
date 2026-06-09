@@ -420,4 +420,551 @@ memanfaatkan RESTful API CodeIgniter 4 dan VueJS.</p>
 ```
 Penjelasan: kode ini berguna sebagai tampilan halaman utama atau Home yang berisi sambutan dan menu navigasi untuk mengatur data artikel secara real-time yang dihubungkan menggunakan Vue Router.
 
-#### 2.  
+#### 2.  Memindahkan Kode Fitur Artikel Ke Komponen (assets/js/components/Artikel.js)
+Memindahkan logika CRUD artikel dari file app.js ke dalam file baru yakni Artikel.js.
+```JS
+const Artikel = {
+    template: `
+    <div>
+
+        <h2>Manajemen Data Artikel</h2>
+
+        <button id="btn-tambah" @click="tambah">
+            Tambah Data
+        </button>
+
+        <div class="modal" v-if="showForm">
+            <div class="modal-content">
+
+                <span class="close" @click="showForm = false">
+                    &times;
+                </span>
+
+                <form id="form-data" @submit.prevent="saveData">
+
+                    <h3>{{ formTitle }}</h3>
+
+                    <div>
+                        <input
+                            type="text"
+                            name="judul"
+                            v-model="formData.judul"
+                            placeholder="Judul"
+                            required
+                        >
+                    </div>
+
+                    <div>
+                        <textarea
+                            name="isi"
+                            rows="10"
+                            v-model="formData.isi"
+                            placeholder="Isi Artikel"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <select
+                            name="status"
+                            v-model="formData.status"
+                        >
+                            <option
+                                v-for="option in statusOptions"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.text }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <input
+                        type="hidden"
+                        v-model="formData.id"
+                    >
+
+                    <button
+                        type="submit"
+                        id="btnSimpan"
+                    >
+                        Simpan
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="showForm = false"
+                    >
+                        Batal
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Judul</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr
+                    v-for="(row, index) in artikel"
+                    :key="row.id"
+                >
+                    <td class="center-text">
+                        {{ row.id }}
+                    </td>
+
+                    <td>
+                        {{ row.judul }}
+                    </td>
+
+                    <td>
+                        {{ statusText(row.status) }}
+                    </td>
+
+                    <td class="center-text">
+                        <a
+                            href="#"
+                            @click.prevent="edit(row)"
+                        >
+                            Edit
+                        </a>
+
+                        |
+
+                        <a
+                            href="#"
+                            @click.prevent="hapus(index, row.id)"
+                        >
+                            Hapus
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    `,
+
+    data() {
+        return {
+            artikel: [],
+
+            formData: {
+                id: null,
+                judul: '',
+                isi: '',
+                status: 0
+            },
+
+            showForm: false,
+
+            formTitle: 'Tambah Data',
+
+            statusOptions: [
+                {
+                    text: 'Draft',
+                    value: 0
+                },
+                {
+                    text: 'Publish',
+                    value: 1
+                }
+            ]
+        };
+    },
+
+    mounted() {
+        this.loadData();
+    },
+
+    methods: {
+
+        // Load Data
+        loadData() {
+
+            axios.get(apiUrl + '/post')
+
+                .then(response => {
+                    this.artikel = response.data.artikel;
+                })
+
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+
+        // Tambah Data
+        tambah() {
+
+            this.showForm = true;
+
+            this.formTitle = 'Tambah Data';
+
+            this.formData = {
+                id: null,
+                judul: '',
+                isi: '',
+                status: 0
+            };
+        },
+
+        // Edit Data
+        edit(data) {
+
+            this.showForm = true;
+
+            this.formTitle = 'Ubah Data';
+
+            this.formData = {
+                id: data.id,
+                judul: data.judul,
+                isi: data.isi,
+                status: data.status
+            };
+        },
+
+        // Hapus Data
+        hapus(index, id) {
+
+            if (confirm('Yakin menghapus data?')) {
+
+                axios.delete(apiUrl + '/post/' + id)
+
+                    .then(response => {
+                        this.artikel.splice(index, 1);
+                    })
+
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
+        },
+
+        // Simpan Data
+        saveData() {
+
+            // UPDATE
+            if (this.formData.id) {
+
+                axios.put(
+                    apiUrl + '/post/' + this.formData.id,
+                    this.formData
+                )
+
+                .then(response => {
+                    this.loadData();
+                })
+
+                .catch(error => {
+                    console.log(error);
+                });
+
+            }
+
+            // INSERT
+            else {
+
+                axios.post(
+                    apiUrl + '/post',
+                    this.formData
+                )
+
+                .then(response => {
+                    this.loadData();
+                })
+
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+
+            // Reset Form
+            this.formData = {
+                id: null,
+                judul: '',
+                isi: '',
+                status: 0
+            };
+
+            this.showForm = false;
+        },
+
+        // Status Artikel
+        statusText(status) {
+
+            if (!status) {
+                return 'Draft';
+            }
+
+            return status == 1
+                ? 'Publish'
+                : 'Draft';
+        }
+    }
+};
+```
+Penjelasan: kode ini berguna untuk perintah CRUD Logika CRUD. Logika ini sebelumnya berada di app.js. lalu, dipindahkan ke artikel.js agar kode lebih terstruktur dan mudah dikelola. File app.js nantinya berguna untuk konfigurasi aplikasi dan routing, sedangkan artikel.js menangani fungsi tambah, tampil, ubah, dan hapus data artikel melalui API.
+
+#### 3. Mengonfigurasi Vue Router pada assets/js/app.js
+Mengedit kode di file app.js untuk mendaftarkan rute internal, komponen, dan melakukan mounting aplikasi.
+```JS
+const { createApp } = Vue;
+const { createRouter, createWebHashHistory } = VueRouter;
+
+// endpoint API
+const apiUrl = 'http://localhost/lab11_ci/ci4/public';
+
+// routes
+const routes = [
+    {
+        path: '/',
+        component: Home
+    },
+    {
+        path: '/artikel',
+        component: Artikel
+    },
+    {
+        path: '/about',
+        component: About
+    }
+];
+
+// router
+const router = createRouter({
+    history: createWebHashHistory(),
+    routes
+});
+
+// app
+const app = createApp({});
+
+app.use(router);
+
+app.mount('#app');
+```
+Penjelasan: Kode tersebut digunakan untuk mengatur navigasi halaman menggunakan Vue Router. Selain itu, kode ini juga mendefinisikan endpoint API, membuat rute untuk halaman Home, Artikel, dan About yang dikonfigurasi menggunakan Hash History agar navigasi antarhalaman dapat berjalan tanpa memuat ulang halaman. lalu menjalankan aplikasi pada elemen HTML dengan id app.
+
+#### 4. Memodifikasi Master Layout pada index.html
+Menyesuaikan kode agar menyediakan menu navigasi menggunakan <router-link> dan tempat penampung halaman dinamis menggunakan <router-view>.
+```JS
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend VueJS</title>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <div id="app">
+        <header>
+            <h1>Daftar Artikel</h1>
+
+            <nav class="nav-menu">
+                <router-link to="/">Beranda</router-link> |
+                <router-link to="/artikel">Kelola Artikel</router-link>
+                <router-link to="/about">About</router-link>
+            </nav>
+        </header>
+
+        <main>
+            <router-view></router-view>
+        </main>
+    </div>
+
+    <!-- Components -->
+    <script src="assets/js/components/Home.js"></script>
+    <script src="assets/js/components/Artikel.js"></script>
+    <script src="assets/js/components/About.js"></script>
+
+    <!-- Main App -->
+    <script src="assets/js/app.js"></script>
+
+</body>
+</html>
+```
+Penjelasan: Menu navigasi seperti halaman Beranda, Kelola Artikel, dan About menggunakan router-link, sedangkan router-view berfungsi menampilkan halaman komponen sesuai rute yang dipilih.
+
+#### 5. Tambahan CSS Menarik pada assets/css/style.css
+Agar tampilan menu terlihat rapi dan menarik.
+```css
+.nav-menu {
+ padding: 10px;
+ background: #eff1ff;
+ border-radius: 5px;
+ margin-bottom: 15px;
+}
+.nav-menu a {
+ text-decoration: none;
+ color: #3152d6;
+ font-weight: bold;
+ padding: 5px 10px;
+}
+/* Style otomatis saat route aktif */
+.router-link-exact-active {
+ background-color: #3152d6;
+ color: #ffffff !important;
+ border-radius: 3px;
+}
+.home-container {
+ padding: 20px;
+ border: 1px solid #eff1ff;
+ background: #fafafa;
+}
+```
+Hasil:
+##### ![Gambar 1](ss1/gambar5.png).
+##### ![Gambar 1](ss1/gambar6.png).
+
+Pertanyaan	dan	Tugas
+1. Selesaikan semua langkah praktikum di atas.
+2. Tambahkan satu rute baru (/about) beserta komponen About.js baru yang berisi profil singkat Anda (Nama, NIM, Kelas, dan Foto/Avatar). Masukkan tautan rutenya ke dalam menu navigasi atas pada index.html.
+```html
+<nav class="nav-menu">
+                <router-link to="/">Beranda</router-link> |
+                <router-link to="/artikel">Kelola Artikel</router-link>
+                <router-link to="/about">About</router-link>
+            </nav>
+```
+Penjelasan: Menu navigasi ditambahkan pada html supaya halaman about dan halaman terhubung.
+```JS
+const routes = [
+    {
+        path: '/',
+        component: Home
+    },
+    {
+        path: '/artikel',
+        component: Artikel
+    },
+    {
+        path: '/about',
+        component: About
+    }
+];
+```
+Penjelasan: Menambahkan route agar dapat berpindah ke halaman about.
+
+```JS
+const About = {
+    template: `
+    <div class="about-container">
+
+        <div class="profile-card">
+
+            <div class="profile-header">
+                <img
+                    src="assets/img/avatar.jpg"
+                    alt="Foto Profil"
+                    class="profile-img"
+                >
+
+                <div class="profile-title">
+                    <h2>Bagus Aditya</h2>
+                    <p>Perograman Web 2</p>
+                </div>
+            </div>
+
+            <div class="profile-info">
+                <table>
+                    <tr>
+                        <td>Nama</td>
+                        <td>Bagus Aditya Hermawan</td>
+                    </tr>
+                    <tr>
+                        <td>NIM</td>
+                        <td>312410382</td>
+                    </tr>
+                    <tr>
+                        <td>Kelas</td>
+                        <td>I241C</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+    `
+};
+```
+Penjelasan: halaman about ini berisikan profil: Nama, NIM, Kelas, dan Foto/Avatar.
+
+```css
+.about-container {
+    margin-top: 20px;
+}
+
+.profile-card {
+    background: #eef0fa;
+    border-radius: 8px;
+    padding: 25px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #3b5bdb;
+}
+
+.profile-title h2 {
+    margin: 0;
+    color: #3b5bdb;
+}
+
+.profile-title p {
+    margin-top: 5px;
+    color: #666;
+}
+
+.profile-info table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.profile-info td {
+    padding: 12px;
+    border-bottom: 1px solid #d6daf0;
+}
+
+.profile-info td:first-child {
+    font-weight: bold;
+    width: 120px;
+    color: #3b5bdb;
+}
+```
+Penjelasan: agar tampilan halaman about lebih menarik.
+3. Lakukan pengujian perpindahan halaman menu (Beranda, Kelola Artikel, dan About) dan pastikan browser tidak melakukan hard-reload (SPA bekerja).
+##### ![Gambar 1](ss1/gambar10.png).
+##### ![Gambar 1](ss1/gambar11.png).
+Tambah artikel:
+##### ![Gambar 1](ss1/gambar7.png).
+Edit artikel:
+##### ![Gambar 1](ss1/gambar8.png).
+Halaman about:
+##### ![Gambar 1](ss1/gambar9.png).
