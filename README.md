@@ -970,3 +970,63 @@ Edit artikel:
 ##### ![Gambar 1](ss1/gambar8.png).
 Halaman about:
 ##### ![Gambar 1](ss1/gambar9.png).
+
+## Langkah-Langkah Praktikum 13: VueJS	Autentikasi	dan	Navigation Guards	(SPA Security)
+Navigation Guards merupakan fitur yang dimiliki oleh Vue router dengan memiliki fungsi  router.beforeEach() yang bertindak sebagai interceptor perpindahan rute yang akan memeriksa status login pengguna sebelum diizinkan rute tersebut ditampilkan di layar browser.
+
+Langkah-langkah Praktikum
+#### Tahap 1: PEMBUATAN API ENDPOINT LOGIN (SISI BACKEND CI4) 
+Menyediakan endpoint REST API di CodeIgniter 4 sebelum ke konfogurasi. berfungsi untuk memvalidasi pengguna yang dikirim dari aplikasi frontend.
+
+Tahap 1.1: Membuat Auth Controller
+Membuat Controller pada app/Controllers/Api/Auth.php. kode seperti berikut:
+
+```php
+<?php
+namespace App\Controllers\Api;
+use CodeIgniter\RESTful\ResourceController;
+use App\Models\UserModel;
+
+class Auth extends ResourceController
+{
+    protected $format = 'json';
+
+    public function login()
+    {
+        $username = $this->request->getVar('username');
+        $password = $this->request->getVar('password');
+        $model = new UserModel();
+
+        $user = $model->where('username', $username)
+            ->orWhere('useremail', $username)
+            ->first();
+
+        if ($user) {
+            if ($password === $user['userpassword'] || password_verify($password, $user['userpassword'])) {
+                return $this->respond([
+                    'status' => 200,
+                    'error' => null,
+                    'messages' => 'Login Berhasil',
+                    'data' => [
+                        'id' => $user['id'],
+                        'username' => $user['username'],
+                        'token' => base64_encode("TOKEN-SECRET-" . $user['username'])
+                    ]
+                ], 200);
+            }
+        }
+
+        return $this->failUnauthorized('Username atau Password yang Anda masukkan salah.');
+    }
+}
+```
+Penjelasan: API login memverifikasi username/email dan password pengguna. Jika data cocok, sistem mengembalikan informasi pengguna beserta token autentikasi. Jika tidak cocok, API akan mengirimkan pesan "Username atau Password yang Anda masukkan salah.".
+
+Tahap 1.2: Mendaftarkan Route API Login
+Menambahkan kode berikut pada file Routes.php.
+```php
+$routes->post('api/login', 'Api\Auth::login');
+```
+Penjelasan: request POST ke endpoint untuk api/login, sistem akan menjalankan method login() pada controller Auth yang berada di folder Api.
+
+#### Tahap 2: PENGEMBANGAN INTEGRASI FRONTEND (SISI VUEJS SPA) 
