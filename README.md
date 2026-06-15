@@ -1501,7 +1501,7 @@ Penjelasan singkat: ketika URL di tembak hasil respon menunjukkan status berhasi
 
 Jawab:
 ##### ![Gambar 1](ss1/gambar20.png).
-Penjelasan singkat: ketika melakukan manipulasi data artikel dan membuka tab network sebelum dijalankan. hasilnya menunjukkan bahwa token berhasil dikirim secara terselubung dilatar belakang sistem seperti yang ada pada gambar diatas
+Penjelasan singkat: ketika melakukan manipulasi data artikel dan membuka tab network sebelum dijalankan. hasilnya menunjukkan bahwa token berhasil dikirim secara terselubung dilatar belakang sistem seperti yang ada pada gambar diatas.
 
 4. Tuliskan kesimpulan akhir dari hasil analisis Anda mengenai perbedaan mendasar fungsi perlindungan keamanan antara Vue Router Navigation Guards (sisi klien) dan CodeIgniter Filters (sisi server).
 Jawab:
